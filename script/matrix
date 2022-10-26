@@ -32,8 +32,10 @@ OLD_GHC_VERSION=`ghc --numeric-version`
 # For each GHC version:
 for GHC_VERSION in "${GHC_VERSIONS[@]}"; do
   set_ghc_version "$GHC_VERSION"
-  echo "Running '$COMMAND' for GHC $GHC_VERSION"
   export GHC_VERSION_MAJOR_MINOR=`major_minor "$GHC_VERSION"`
+  COMMAND_STRING=$(eval echo "$COMMAND")
+  echo "Using GHC $GHC_VERSION"
+  echo "$COMMAND_STRING"
   eval "$COMMAND"
   export -n GHC_VERSION_MAJOR_MINOR
 done
