@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# See: https://stackoverflow.com/a/4774063
+SCRIPT_DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+$SCRIPT_DIR/matrix.sh 'cabal v2-freeze --project-file=cabal.project.ghc-$GHC_VERSION_MAJOR_MINOR'

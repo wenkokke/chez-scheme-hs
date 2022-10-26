@@ -11,35 +11,23 @@ jobs:
         ghc-version: ["9.4"]
         cabal-version: ["3.8"]
 
+    env:
+      CABAL_PROJECT_FILE: cabal.project.ghc-${{ matrix.ghc-version }}
+      CABAL_PROJECT_FREEZE_FILE: cabal.project.ghc-${{ matrix.ghc-version }}.freeze
+
     name: Build on ${{ matrix.os }} with GHC ${{ matrix.ghc-version }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - id: setup-haskell
-        name: Setup Haskell
-        uses: haskell/actions/setup@v2
+      - name: Setup Haskell
+        uses: ./.github/actions/setup-haskell
         with:
           ghc-version: ${{ matrix.ghc-version }}
           cabal-version: ${{ matrix.cabal-version }}
+          cabal-project-file: ${{ env.CABAL_PROJECT_FILE }}
+          cabal-project-freeze-file: ${{ env.CABAL_PROJECT_FREEZE_FILE }}
 
-      - name: Freeze Haskell dependencies
-        run: |
-          cabal v2-update
-          cabal v2-freeze $CABAL_ARGS
-
-      - name: Cache Haskell dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ steps.setup-haskell.outputs.cabal-store }}
-            dist-newstyle
-          key: haskell-${{ runner.os }}-${{ matrix.ghc-version }}-${{ hashFiles(cabal.project.freeze) }}
-          restore-keys: haskell-${{ runner.os }}-${{ matrix.ghc-version }}-
-
-      - name: Build
+      - name: Build ChezSchemeHs
         run: cabal v2-build
-
-      - name: Test
-        run: cabal v2-test

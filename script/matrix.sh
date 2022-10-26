@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Parse a version and print the major and minor numbers:
+function major_minor {
+  VERSION="$1"
+  VERSION_PARTS=()
+  IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
+  echo "${VERSION_PARTS[0]}.${VERSION_PARTS[1]}"
+}
+
+# Set the GHC version
+function set_ghc_version {
+  GHC_VERSION="$1"
+  GHCUP_ERRORS="$(ghcup set ghc "$GHC_VERSION" 2>&1 >/dev/null)"
+  GHCUP_STATUS=$?
+  [ $GHCUP_STATUS -ne 0 ] && echo "$GHCUP_ERRORS"
+}
+
+# Get the command:
+COMMAND=$1
+
+# See: https://stackoverflow.com/a/4774063
+ROOT_DIR="$(dirname $( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P ))"
+
+# Read the GHC versions from .ghc-versions
+GHC_VERSIONS=()
+read -ra GHC_VERSIONS <<< `cat "$ROOT_DIR/.ghc-versions"`
+
+# Backup the old GHC version:
+OLD_GHC_VERSION=`ghc --numeric-version`
+
+# For each GHC version:
+for GHC_VERSION in "${GHC_VERSIONS[@]}"; do
+  set_ghc_version "$GHC_VERSION"
+  echo "Running '$COMMAND' for GHC $GHC_VERSION"
+  export GHC_VERSION_MAJOR_MINOR=`major_minor "$GHC_VERSION"`
+  eval "$COMMAND"
+  export -n GHC_VERSION_MAJOR_MINOR
+done
+
+# Restore the old GHC version:
+set_ghc_version "$OLD_GHC_VERSION"
