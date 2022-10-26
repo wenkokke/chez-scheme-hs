@@ -1,0 +1,3 @@
+[submodule "vendor/ChezScheme"]
+	path = vendor/ChezScheme
+	url = https://github.com/cisco/ChezScheme.git

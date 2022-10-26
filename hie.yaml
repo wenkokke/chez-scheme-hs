@@ -1,0 +1,23 @@
+cradle:
+  multi:
+    - path: "./src"
+      config:
+        cradle:
+          cabal:
+            - path: "./src"
+              component: "lib:chez-scheme-hs"
+
+    - path: "./tests"
+      config:
+        cradle:
+          cabal:
+            - path: "./tests"
+              component: "lib:chez-scheme-hs-test"
+
+    - path: "./"
+      config:
+        cradle:
+          direct:
+            arguments:
+              - "-package Cabal"
+              - "-package base"
