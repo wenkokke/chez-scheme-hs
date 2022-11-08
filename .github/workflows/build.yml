@@ -20,8 +20,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          submodules: true
 
       - name: Setup Haskell
         uses: ./.github/actions/setup-haskell
@@ -30,6 +28,10 @@ jobs:
           cabal-version: ${{ matrix.cabal-version }}
           cabal-project-file: ${{ env.CABAL_PROJECT_FILE }}
           cabal-project-freeze-file: ${{ env.CABAL_PROJECT_FREEZE_FILE }}
+          
+      - name: Git Submodules
+        run: git submodule update --init --recursive
+        shell: sh
 
       - name: Build ChezSchemeHs
         run: cabal v2-build
