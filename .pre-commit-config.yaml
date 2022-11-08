@@ -29,3 +29,22 @@ repos:
       - id: end-of-file-fixer
       - id: mixed-line-ending
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: cabal-fmt
+        name: "format cabal with cabal-fmt"
+        entry: cabal-fmt
+        language: system
+        types: [file, text]
+        files: ^.*\.cabal$
+        args: [--check, --inplace]
+      - id: stylish-haskell
+        name: "format haskell with stylish-haskell"
+        entry: stylish-haskell
+        language: system
+        types: [haskell]
+        args: [--inplace]
+
+# Do not run local hooks on pre-commit CI:
+ci:
+  skip: [cabal-fmt, stylish-haskell]
