@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
         ghc-version: ["9.2"]
-        cabal-version: ["3.8"]
+        cabal-version: ["latest"]
 
     env:
       CABAL_PROJECT_FILE: cabal.project.ghc-${{ matrix.ghc-version }}
