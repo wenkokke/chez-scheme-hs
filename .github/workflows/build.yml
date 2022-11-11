@@ -28,7 +28,7 @@ jobs:
           cabal-version: ${{ matrix.cabal-version }}
           cabal-project-file: ${{ env.CABAL_PROJECT_FILE }}
           cabal-project-freeze-file: ${{ env.CABAL_PROJECT_FREEZE_FILE }}
-          
+
       - name: Git Submodules
         run: git submodule update --init --recursive
         shell: sh
